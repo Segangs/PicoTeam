@@ -238,6 +238,67 @@ def board():
 # 게시글 작성
 # =========================
 
+def format_created_at(value):
+
+    if not value:
+        return ""
+
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).strftime("%Y-%m-%d %H:%M")
+    except ValueError:
+        return value
+
+
+@app.route("/board/<int:board_id>")
+def board_detail(board_id):
+
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
+    try:
+
+        board_response = (
+            supabase.table("board")
+            .select("*")
+            .eq("boardId", board_id)
+            .limit(1)
+            .execute()
+        )
+
+        if not board_response.data:
+            flash("게시글을 찾을 수 없습니다.")
+            return redirect(url_for("board"))
+
+        board_item = board_response.data[0]
+        author_name = "알 수 없음"
+
+        if board_item.get("userId"):
+            user_response = (
+                supabase.table("users")
+                .select("userName")
+                .eq("userId", board_item["userId"])
+                .limit(1)
+                .execute()
+            )
+
+            if user_response.data:
+                author_name = user_response.data[0].get("userName", author_name)
+
+        return render_template(
+            "board_detail.html",
+            board=board_item,
+            author_name=author_name,
+            created_at=format_created_at(board_item.get("created_at")),
+            user_name=session.get("user_name")
+        )
+
+    except Exception as e:
+
+        print(e)
+        flash(str(e))
+        return redirect(url_for("board"))
+
+
 @app.route("/write", methods=["POST"])
 def write():
 
@@ -292,7 +353,7 @@ if __name__ == "__main__":
     print("=================================")
 
     app.run(
-        host="0.0.0.0",
-        port=5000,
+        host="127.0.0.1",
+        port=8080,
         debug=True
     )
