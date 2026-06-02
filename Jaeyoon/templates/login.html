@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>콜드체인 모니터링 - 로그인</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .btn {
+            padding: 0.75rem;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #357abd;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .links a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .flashes {
+            list-style: none;
+            margin-bottom: 1rem;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        
+        .error {
+            background-color: #ffe6e6;
+            color: #d8000c;
+            border: 1px solid #d8000c;
+        }
+        
+        .success {
+            background-color: #dff2bf;
+            color: #4f8a10;
+            border: 1px solid #4f8a10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>콜드체인 시스템 로그인</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="input-group">
+                <label for="userAccountId">아이디</label>
+                <input type="text" id="userAccountId" name="userAccountId" required placeholder="아이디를 입력하세요">
+            </div>
+            
+            <div class="input-group">
+                <label for="userPassword">비밀번호</label>
+                <input type="password" id="userPassword" name="userPassword" required placeholder="비밀번호를 입력하세요">
+            </div>
+
+            <button type="submit" class="btn">로그인</button>
+        </form>
+
+        <div class="links">
+            <a href="#">비밀번호 찾기</a>
+            <a href="{{ url_for('register') }}">회원가입</a>
+        </div>
+    </div>
+
+</body>
+</html>
