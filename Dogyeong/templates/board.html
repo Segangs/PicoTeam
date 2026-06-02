@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f4f7f6;
+            color: #222;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 32px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        h1,
+        h2,
+        p {
+            margin: 0;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            width: min(960px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+
+        .panel {
+            margin-bottom: 24px;
+            padding: 24px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .flash-list {
+            margin: 0 0 18px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .flash-list li {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            background: #dbeafe;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            font-weight: 700;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd6df;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button {
+            margin-top: 16px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .board-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .board-item {
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .board-item h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .board-item p {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .empty {
+            padding: 24px;
+            border: 1px dashed #cfd6df;
+            border-radius: 8px;
+            text-align: center;
+            color: #667085;
+        }
+
+        @media (max-width: 640px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 18px;
+            }
+
+            .user-area {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>게시판</h1>
+        <div class="user-area">
+            <span>{{ user_name }}님 환영합니다.</span>
+            <a href="{{ url_for('logout') }}">로그아웃</a>
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-list">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <section class="panel">
+            <h2>글 작성</h2>
+            <form action="{{ url_for('write') }}" method="post">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="content">내용</label>
+                <textarea id="content" name="content" required></textarea>
+
+                <button type="submit">등록</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>글 목록</h2>
+            {% if boards %}
+                <div class="board-list">
+                    {% for board in boards %}
+                        <article class="board-item">
+                            <h3>{{ board.title }}</h3>
+                            <p>{{ board.content }}</p>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">등록된 글이 없습니다.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

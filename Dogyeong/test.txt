@@ -1,0 +1,162 @@
+## Table `users`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `userId` | `int4` | Primary |
+| `userAccountId` | `varchar` |  Nullable |
+| `userPassword` | `varchar` |  Nullable |
+| `userName` | `varchar` |  Nullable |
+| `userPhoneNumber` | `varchar` |  Nullable |
+| `userPaymentStatus` | `varchar` |  Nullable |
+| `userCreateDate` | `timestamp` |  Nullable |
+| `userActiveStatus` | `varchar` |  Nullable |
+
+## Table `usim`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `usimId` | `int4` | Primary |
+| `usimMNO` | `varchar` |  Nullable |
+| `usimIMSI` | `varchar` |  Nullable |
+| `usimICCID` | `varchar` |  Nullable |
+
+## Table `machine`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `machineId` | `int4` | Primary |
+| `systemType` | `varchar` |  Nullable |
+| `modelName` | `varchar` |  Nullable |
+| `manufacturer` | `varchar` |  Nullable |
+| `machineRegDate` | `date` |  Nullable |
+| `machineStatus` | `int2` |  Nullable |
+
+## Table `userworkplace`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `userWorkplaceId` | `int4` | Primary |
+| `userId` | `int4` |  Nullable |
+| `WorkplaceAddress` | `varchar` |  Nullable |
+| `WorkplaceType` | `varchar` |  Nullable |
+| `WorkplaceAddressRegDate` | `timestamp` |  Nullable |
+
+## Table `device`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `deviceId` | `int4` | Primary |
+| `deviceType` | `varchar` |  Nullable |
+| `deviceSerialNumber` | `varchar` |  Nullable |
+| `deviceIMEI` | `varchar` |  Nullable |
+| `deviceStatus` | `varchar` |  Nullable |
+| `usimId` | `int4` |  Nullable |
+| `userId` | `int4` |  Nullable |
+| `userWorkplaceId` | `int4` |  Nullable |
+
+## Table `sensor`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `sensorId` | `int4` | Primary |
+| `sensorModelName` | `varchar` |  Nullable |
+| `sensorType` | `varchar` |  Nullable |
+| `sensorMemo` | `varchar` |  Nullable |
+| `deviceId` | `int4` |  Nullable |
+
+## Table `sensorvalue`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `sensorValueId` | `int4` | Primary |
+| `sensorId` | `int4` |  Nullable |
+| `sensorValue` | `numeric` |  Nullable |
+| `sensorvaluetime` | `timestamp` |  Nullable |
+
+## Table `usermachine`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `userMachineId` | `int4` | Primary |
+| `machineId` | `int4` |  Nullable |
+| `deviceId` | `int4` |  Nullable |
+| `userMachineManufactureDate` | `date` |  Nullable |
+| `userMachineRegDate` | `date` |  Nullable |
+
+## Table `alertsend`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `alertSendId` | `int4` | Primary |
+| `userId` | `int4` |  Nullable |
+| `userMachineId` | `int4` |  Nullable |
+| `sensorValueId` | `int4` |  Nullable |
+| `alertSendDate` | `timestamp` |  Nullable |
+
+## Table `payment`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `paymentId` | `int4` | Primary |
+| `userId` | `int4` |  Nullable |
+| `paymentAmount` | `int4` |  Nullable |
+| `paymentDate` | `date` |  Nullable |
+| `StartUsagePeriod` | `date` |  Nullable |
+| `EndUsagePeriod` | `date` |  Nullable |
+
+## Table `repairlog`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `repairLogId` | `int4` | Primary |
+| `userId` | `int4` |  Nullable |
+| `userMachineId` | `int4` |  Nullable |
+| `repairDate` | `timestamp` |  Nullable |
+| `repairMemo` | `varchar` |  Nullable |
+| `repairCosts` | `int4` |  Nullable |
+
+## Table `usersettings`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `userSettingsId` | `int4` | Primary |
+| `userMachineId` | `int4` |  Nullable |
+| `tempUpperLimitValue` | `numeric` |  Nullable |
+| `tempLowerLimitValue` | `numeric` |  Nullable |
+
+## Table `board`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `boardId` | `int4` | Primary |
+| `title` | `varchar` |  |
+| `content` | `text` |  |
+| `userId` | `int4` |  Nullable |
+| `created_at` | `timestamp` |  Nullable |
+
