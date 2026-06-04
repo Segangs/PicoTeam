@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}게시판{% endblock %}
+
+{% block header %}
+<header>
+    <h1>게시판</h1>
+    <div class="user-area">
+        <span>{{ user_name }}님 환영합니다.</span>
+        <a href="{{ url_for('logout') }}">로그아웃</a>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+
+<section class="panel">
+    <div class="board-header">
+        <h2>글 목록</h2>
+
+        <button class="write-btn" onclick="openModal()">
+            글쓰기
+        </button>
+    </div>
+
+    {% if boards %}
+    <ul class="board-list">
+        {% for board in boards %}
+        <li>
+            <a href="{{ url_for('board_detail', board_id=board.boardId) }}">
+                {{ board.title }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">등록된 글이 없습니다.</p>
+    {% endif %}
+</section>
+
+<!-- 모달 -->
+<div id="writeModal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close-btn" onclick="closeModal()">
+            &times;
+        </span>
+
+        <h2>게시글 작성</h2>
+
+        <form action="{{ url_for('write') }}" method="post">
+
+            <label>제목</label>
+            <input
+                type="text"
+                name="title"
+                required
+            >
+
+            <label>내용</label>
+            <textarea
+                name="content"
+                rows="10"
+                required
+            ></textarea>
+
+            <button type="submit">
+                등록
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+
+.board-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.write-btn{
+    padding:10px 16px;
+    cursor:pointer;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.5);
+
+    z-index:1000;
+}
+
+.modal-content{
+    background:white;
+
+    width:600px;
+    max-width:90%;
+
+    margin:80px auto;
+    padding:25px;
+
+    border-radius:10px;
+}
+
+.modal-content input,
+.modal-content textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:15px;
+    box-sizing:border-box;
+}
+
+.close-btn{
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+}
+
+</style>
+
+<script>
+
+function openModal(){
+    document.getElementById("writeModal").style.display = "block";
+}
+
+function closeModal(){
+    document.getElementById("writeModal").style.display = "none";
+}
+
+window.onclick = function(event){
+
+    const modal = document.getElementById("writeModal");
+
+    if(event.target === modal){
+        closeModal();
+    }
+}
+
+</script>
+
+{% endblock %}

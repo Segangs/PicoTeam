@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ board.title }}{% endblock %}
+
+{% block header %}
+    <header>
+        <h1>게시판</h1>
+        <div class="user-area">
+            <span>{{ user_name }}님 환영합니다.</span>
+            <a href="{{ url_for('logout') }}">로그아웃</a>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h2>{{ board.title }}</h2>
+        <div class="post-meta">
+            <span>작성자: {{ author_name }}</span>
+            <span>작성일: {{ created_at }}</span>
+        </div>
+        <p class="post-content">{{ board.content }}</p>
+
+        <a class="button" href="{{ url_for('board') }}">목록으로</a>
+    </section>
+    
+{% endblock %}

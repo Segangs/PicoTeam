@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PicoTeam{% endblock %}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f4f7f6;
+            color: #222;
+        }
+
+        body.auth-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        a {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 32px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .page-main {
+            width: min(960px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-box h1 {
+            margin-bottom: 24px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .panel {
+            margin-bottom: 24px;
+            padding: 24px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .flash-list {
+            margin: 0 0 18px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .flash-list li {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            background: #dbeafe;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+
+        .auth-page .flash-list li {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            font-weight: 700;
+        }
+
+        .auth-box label {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd6df;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .auth-box input {
+            height: 44px;
+            margin-bottom: 18px;
+            padding: 0 12px;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button,
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            margin-top: 16px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover,
+        .button:hover {
+            background: #1d4ed8;
+            text-decoration: none;
+        }
+
+        .auth-box button {
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .oauth-button {
+            width: 100%;
+            margin-top: 12px;
+            background: #ffffff;
+            color: #111827;
+            border: 1px solid #cfd6df;
+        }
+
+        .oauth-button:hover {
+            background: #f8fafc;
+            color: #111827;
+        }
+
+        .auth-link {
+            margin: 20px 0 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .board-list {
+            margin: 16px 0 0;
+            padding: 0;
+            list-style: none;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .board-list li {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .board-list a {
+            display: block;
+            padding: 16px 4px;
+            color: #222;
+        }
+
+        .board-list a:hover {
+            color: #2563eb;
+        }
+
+        .post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 12px 0 24px;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .post-content {
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+
+        .empty {
+            padding: 24px;
+            border: 1px dashed #cfd6df;
+            border-radius: 8px;
+            text-align: center;
+            color: #667085;
+        }
+
+        @media (max-width: 640px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 18px;
+            }
+
+            .user-area {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% block header %}{% endblock %}
+
+    {% block body %}
+        <main class="page-main">
+            {% block flash_messages %}
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class="flash-list">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        </main>
+    {% endblock %}
+</body>
+</html>
