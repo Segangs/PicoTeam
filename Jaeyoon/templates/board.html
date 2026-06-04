@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}게시판{% endblock %}
+
+{% block header %}
+    <header>
+        <h1>게시판</h1>
+        <div class="user-area">
+            <span>{{ user_name }}님 환영합니다.</span>
+            <a href="{{ url_for('logout') }}">로그아웃</a>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+
+<section class="panel">
+    <h2>글 목록</h2>
+    {% if boards %}
+    <ul class="board-list">
+        {% for board in boards %}
+        <li>
+            <a href="{{ url_for('board_detail', board_id=board.boardId) }}">
+                {{ board.title }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">등록된 글이 없습니다.</p>
+    {% endif %}
+</section>
+<section class="panel">
+    <h2>글 작성</h2>
+    <form action="{{ url_for('write') }}" method="post">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="content">내용</label>
+        <textarea id="content" name="content" required></textarea>
+
+        <button type="submit">등록</button>
+    </form>
+</section>
+<div id="chatbot-wrapper" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: sans-serif;">
+    <button id="chatbot-toggle-btn" style="background-color: #007bff; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">💬</button>
+    
+    <div id="chatbot-box" style="display: none; width: 350px; height: 450px; background-color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid #e0e0e0; flex-direction: column; overflow: hidden; margin-bottom: 15px;">
+        <div style="background-color: #007bff; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+            <span>AI 게시판 도우미</span>
+            <button id="chatbot-close-btn" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
+        </div>
+        <div id="chatbot-messages" style="flex: 1; padding: 15px; overflow-y: auto; background-color: #f8f9fa; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background-color: #e9ecef; padding: 10px; border-radius: 10px; align-self: flex-start; max-width: 80%; font-size: 14px;">
+                안녕하세요, {{ user_name }}님! 무엇을 도와드릴까요?
+            </div>
+        </div>
+        <div style="padding: 10px; display: flex; border-top: 1px solid #e0e0e0; background-color: white;">
+            <input type="text" id="chatbot-input" placeholder="메시지를 입력하세요..." style="flex: 1; border: 1px solid #ccc; padding: 8px; border-radius: 4px; outline: none;">
+            <button id="chatbot-send-btn" style="background-color: #007bff; color: white; border: none; padding: 0 15px; margin-left: 5px; border-radius: 4px; cursor: pointer;">전송</button>
+        </div>
+    </div>
+</div> 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('chatbot-toggle-btn');
+    const closeBtn = document.getElementById('chatbot-close-btn');
+    const chatBox = document.getElementById('chatbot-box');
+    const sendBtn = document.getElementById('chatbot-send-btn');
+    const chatInput = document.getElementById('chatbot-input');
+    const chatMessages = document.getElementById('chatbot-messages');
+
+    // 열기/닫기 토글
+    toggleBtn.addEventListener('click', () => {
+        chatBox.style.display = 'flex';
+        toggleBtn.style.display = 'none';
+    });
+    closeBtn.addEventListener('click', () => {
+        chatBox.style.display = 'none';
+        toggleBtn.style.display = 'block';
+    });
+
+    // 메시지 화면 추가 함수
+    function appendMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.innerText = text;
+        msgDiv.style.padding = '10px';
+        msgDiv.style.borderRadius = '10px';
+        msgDiv.style.maxWidth = '80%';
+        msgDiv.style.fontSize = '14px';
+
+        if (isUser) {
+            msgDiv.style.backgroundColor = '#007bff';
+            msgDiv.style.color = 'white';
+            msgDiv.style.alignSelf = 'flex-end';
+        } else {
+            msgDiv.style.backgroundColor = '#e9ecef';
+            msgDiv.style.color = 'black';
+            msgDiv.style.alignSelf = 'flex-start';
+        }
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // 스크롤 하단 고정
+    }
+
+    // 서버로 메시지 전송
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        appendMessage(message, true); // 화면에 사용자 입력 추가
+        chatInput.value = '';
+
+        // 로딩 표시
+        const loadingDiv = document.createElement('div');
+        loadingDiv.innerText = "답변 생각 중...";
+        loadingDiv.style.color = "#888";
+        loadingDiv.style.fontSize = "12px";
+        loadingDiv.style.alignSelf = "flex-start";
+        chatMessages.appendChild(loadingDiv);
+
+        fetch('/api/chatbot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            chatMessages.removeChild(loadingDiv); // 로딩 제거
+            if (data.reply) {
+                appendMessage(data.reply, false);
+            } else if (data.error) {
+                appendMessage("에러: " + data.error, false);
+            }
+        })
+        .catch(err => {
+            chatMessages.removeChild(loadingDiv);
+            appendMessage("서버 통신 실패에 실패했습니다.", false);
+            console.error(err);
+        });
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+});
+</script>
+{% endblock %}
