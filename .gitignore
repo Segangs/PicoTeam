@@ -14,3 +14,5 @@ Build/
 *.hex
 *.map
 /Sangsu/.env
+/Segang/project/certbot/
+*.log
