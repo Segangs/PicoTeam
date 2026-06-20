@@ -13,21 +13,21 @@
 ---
 
 ## 🎯 프로젝트 개요 & 목적
-본 프로젝트는 **NB-IoT (HL7811) 셀룰러 모듈**과 **Raspberry Pi Pico 2 W** 단말을 기반으로 한 **초저전력 지능형 이상온도 감지 및 실시간 원격 관제 시스템**입니다. 
-산업용 극저온 냉동고 및 백신 보관소 등의 온도 데이터를 수집하고, 실시간 통신 및 동적 임계 규칙 탐지 엔진을 통해 이상 현상을 관제 화면에 송출 및 AI 챗봇을 통한 능동적 대처 가이드를 제시하는 것을 목적으로 합니다.
+본 저장소는 **Pico 단말이 Supabase 클라우드로 전송하는 실시간 온도 데이터**를 가공 및 활용하여, **Python Flask 기반의 웹 관제 서비스** 및 **PyWebView 데스크톱 패키징 클라이언트**를 설계하고 구현하는 실습을 진행한 프로젝트입니다.
 
-### 🛠️ 주요 기술 사항 및 아키텍처
-* **Edge Device (단말 장치)**:
-  * **MCU**: RP2350 (Raspberry Pi Pico 2 W) 기반 C/C++ SDK 펌웨어 설계.
-  * **RTOS**: FreeRTOS 커널 멀티태스킹 스케줄링을 통해 센서 측정, LCD 렌더링, 모뎀 통신, 부저 경보 루틴을 완벽히 병렬화.
-  * **Modem**: HL7811 셀룰러 모뎀을 제어하여 LTE-M(NB-IoT) 망을 통한 TLS 1.2 보안 규격 통신 연동.
-  * **Self-Diagnostics**: 부팅 단계에서 전압(VSYS), 과열(Internal Temp), 플래시 무결성(CRC32), RAM 무결성(Pattern Test) 자가진단 수행.
-  * **Safety Guard**: 하드웨어 와치독(Watchdog), Powman 브라운아웃(Brown-out) 감지 및 오프라인 상태 대비 Flash 비휘발성 로깅 시스템(32바이트 구조체 정렬) 구축.
-* **Control System & Web Server (관제 웹 및 데스크톱)**:
-  * **Backend**: Flask (Python) 기반의 데이터 적재 API 및 기기 상태 관제 서버 구축.
-  * **Database & BaaS**: Supabase PostgreSQL을 통해 센서 측정값 및 부팅 자가진단 로그를 적재하고, Google OAuth 2.0 사용자 및 세션 만료 관리.
-  * **Realtime Sync**: Supabase Realtime 웹소켓(WebSocket) 감지를 연동하여 실시간 데이터 변화 감지 및 화면 깜빡임 없는 DOM 갱신.
-  * **Desktop Packaging**: PyWebView를 통해 단일 브라우저 루프백 연동 로그인(Safari/Chrome 패스크 우회)을 지원하는 크로스 플랫폼 데스크톱 패키징 실현.
+BaaS(Supabase) 및 백엔드(Flask) API의 상호 동기화, 사용자 등급별(일반/관리자) 대시보드 시각화, 그리고 실시간 이상 온도 검출 웹소켓 연동 등의 다양한 웹 기술 실습을 목적으로 합니다.
+
+### 🛠️ 주요 구현 사항 및 기술 스택
+* **Web Control System (Flask 백엔드)**:
+  * **Framework**: Python Flask 기반의 경량 데이터 수집 및 상태 관제 서버 구축.
+  * **Authentication**: Supabase Auth 및 Google OAuth 2.0 연동 로그인(일반/구글), 비활동 세션 만료 정책(1시간 타임아웃), 비밀번호 해싱 단방향 암호화 적용.
+  * **Database Connection**: Supabase Python SDK를 연동하여 센서 측정값(`sensorvalue`), 기기 부팅 로그(`device_boot_logs`), 사용자 설정(`usersettings`) 테이블의 실시간 쿼리 및 매핑 수행.
+  * **Dynamic Rule Engine**: 사용자가 지정한 기기별 임계값 범위(상한 초과 조건)를 감지하여 비동기 경보 메시지를 생성하고 실시간 관제 대시보드에 적재하는 이상 탐지 엔진 작동.
+* **Responsive Frontend & Desktop App (웹뷰 및 UI)**:
+  * **Realtime Sync**: Supabase Realtime 웹소켓(WebSocket) 변경 이벤트를 JavaScript로 수신하여 브라우저 새로고침 없이 화면을 매끄럽게 자동 갱신.
+  * **Responsive Layout**: PyWebView 데스크톱 윈도우 크기에 맞추어 Grid 카드 및 Chart.js 캔버스가 유연하게 축소되는 CSS Grid 가변 반응형 아키텍처 도입.
+  * **Desktop Handshake**: PyWebView(임베디드 웹뷰) 내부에서 구글 패스키(Passkey/WebAuthn) 및 OAuth 리디렉션 보안 제한을 우회하기 위해, 시스템 기본 브라우저를 호출하여 토큰을 교환한 뒤 세션을 마킹해 가져오는 **루프백 세션 핸드셰이크(Loopback Session Handshake)** 및 우회 단축키 안내 UX 구축.
+  * **Aesthetics & Performance**: SUITE 폰트 및 FontAwesome 에셋의 로컬 서버 서빙 전환으로 모바일 Safari 환경의 렌더 블로킹(프리징) 문제 완벽 해결 및 매혹적인 딥블루 테마 마스코트(Owly 부엉이) 브랜딩 일치화.
 
 ---
 
