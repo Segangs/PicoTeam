@@ -1,0 +1,16 @@
+.env
+.env.local
+.env.production
+.env.development
+.env.staging
+.DS_Store
+*.pyc
+__pycache__/
+build/
+Build/
+*.uf2
+*.elf
+*.bin
+*.hex
+*.map
+/Sangsu/.env

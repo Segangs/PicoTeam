@@ -21,10 +21,17 @@ constexpr const char* kWifiPassword = "bindsoft24";
 constexpr const char* kDeviceId = "2026000003";
 constexpr const char* kDeviceImei = "351234567890003";
 
-constexpr const char* kSupabaseHost = "YOUR_SUPABASE_HOST_PLACEHOLDER";
+#ifndef SUPABASE_HOST
+#define SUPABASE_HOST "YOUR_SUPABASE_HOST_PLACEHOLDER"
+#endif
+
+#ifndef SUPABASE_ANON_KEY
+#define SUPABASE_ANON_KEY "YOUR_SUPABASE_ANON_KEY_PLACEHOLDER"
+#endif
+
+constexpr const char* kSupabaseHost = SUPABASE_HOST;
 constexpr const char* kSupabasePath = "/rest/v1/rpc/insert_sensor_value";
-constexpr const char* kSupabaseApiKey =
-    "YOUR_SUPABASE_ANON_KEY_PLACEHOLDER";
+constexpr const char* kSupabaseApiKey = SUPABASE_ANON_KEY;
 
 constexpr uint16_t kHttpsPort = 443;
 constexpr int kSendIntervalMs = 60 * 1000;
