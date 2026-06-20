@@ -3,11 +3,12 @@
 > [!IMPORTANT]
 > **📢 프로젝트 이전 및 관리 통합 안내**
 > 
-> 본 저장소(`https://github.com/Segangs/PicoTeam`)는 **2026년 6월 1일부터 6월 5일까지** 진행된 **NB-IoT 기반 지능형 이상감지 관제 시스템** 개발의 일환으로, **Python Flask 백엔드 및 PyWebView 데스크톱 패키징 실습**을 위해 공동 개발한 팀 프로젝트 저장소입니다.
+> 본 저장소(`https://github.com/Segangs/PicoTeam`)는 **2026년 6월 1일부터 6월 5일까지** 진행된 **NB-IoT 프로젝트의 일부**로, **Python Flask 백엔드 및 PyWebView 데스크톱 패키징 실습**을 위해 공동 개발한 팀 프로젝트 저장소입니다.
 > 
-> 현재 본 프로젝트의 펌웨어 소스 코드와 웹 관제 서비스 전체 소스는 단일화 및 모노레포(Monorepo) 통합이 완료되어 **[NB-IoT 프로젝트 메인 저장소 (NB-IOT-Project)](https://github.com/Segangs/NB-IOT-Project)**에서 지속적인 고도화 및 관리가 이루어지고 있습니다.
+> **Raspberry Pi Pico와 LTE-modem 등을 사용한 전체 프로젝트**는 단일화 및 모노레포(Monorepo) 통합이 완료되어 **[NB-IoT 프로젝트 메인 저장소 (NB-IOT-Project)](https://github.com/Segangs/NB-IOT-Project)**에서 통합 관리 및 고도화가 계속 진행 중입니다.
 > 
-> 👉 **[NB-IoT 메인 개발 저장소 바로가기 🚀](https://github.com/Segangs/NB-IOT-Project)**
+> 👉 **[NB-IoT 전체 프로젝트 저장소 바로가기 🚀](https://github.com/Segangs/NB-IOT-Project)**
+
 
 ---
 
