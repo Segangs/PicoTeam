@@ -26,6 +26,24 @@
 
 ---
 
+## 📅 2026-06-21: [단말 펌웨어] RTOS 스택 오버플로우 방지 및 UART 락 충돌 방지 패치
+* **연동 대화 ID**: `9dc91f96-ffb3-4b09-99d9-8e51ecea9d9e` (2부 / 현재 대화)
+* **개발 범주**: FreeRTOS Task Stacks, stdio Mutex Locking, UART Deadlock Avoidance, Buffer Race Conditions
+
+### 1. 작업 개요 (Goal & Requirements)
+* HTTPS 송출과 3분 주기 NTC 온도 디버그 `printf` 출력 타이밍이 겹칠 때 단말이 뻗는(출력 잘림 및 무반응) 현상 해결.
+
+### 2. 주요 작업 및 기술적 의사결정
+* **스택 사이즈 최적화 (`main.cpp` 수정)**:
+  - `vSensorTask` 스택 크기를 `256 words` (1024 bytes)에서 `1024 words` (4096 bytes)로 4배 증설하여 `printf` 내부의 대용량 float 포맷터와 수학 라이브러리(`log`) 연산에 필요한 스택 마진을 충분히 보장함.
+  - 추가로 `vDebugTask`와 `vBuzzerTask` 스택 역시 각각 `512`에서 `1024 words`로 확장하여 태스크 구동의 안정성을 높임.
+* **로그 출력 상호 배제 가드 추가 (`tasks_sensor.cpp` 수정)**:
+  - 3분 주기 디버그 로그 `[Sensor Dbg]` 출력 시, 모뎀이 데이터를 전송 중이거나 비지 상태(`lcd_params.is_transmitting || lcd_params.is_modem_busy == true`)인 경우 출력을 1초간 미루고 건너뛰도록 가드 구현. 이를 통해 stdout(UART0) Mutex 락 경합 및 교착 상태를 원천 차단함.
+* **빌드 및 갱신 완료**:
+  - Ninja 컴파일러 빌드를 통해 오류 없이 바이너리 갱신 완료.
+
+---
+
 ## 📅 2026-06-20: [단말 펌웨어] 네트워크/서버 환경 설정 변수 .env 이전 및 CMake 동적 매크로 전역 도입
 * **개발 범주**: Security Hardening, CMake Build, Environment Variables (.env)
 
