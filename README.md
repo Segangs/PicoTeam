@@ -1,6 +1,32 @@
 # 🚀 PicoTeam 공동 개발 저장소
 
-PicoTeam의 공동 작업 및 개발 로그 관리를 위한 저장소입니다.
+> [!IMPORTANT]
+> **📢 프로젝트 이전 및 관리 통합 안내**
+> 
+> 본 저장소(`https://github.com/Segangs/PicoTeam`)는 **2026년 6월 1일부터 6월 5일까지** 진행된 **NB-IoT 기반 지능형 이상감지 관제 시스템** 개발의 일환으로, **Python Flask 백엔드 및 PyWebView 데스크톱 패키징 실습**을 위해 공동 개발한 팀 프로젝트 저장소입니다.
+> 
+> 현재 본 프로젝트의 펌웨어 소스 코드와 웹 관제 서비스 전체 소스는 단일화 및 모노레포(Monorepo) 통합이 완료되어 **[NB-IoT 프로젝트 메인 저장소 (NB-IOT-Project)](https://github.com/Segangs/NB-IOT-Project)**에서 지속적인 고도화 및 관리가 이루어지고 있습니다.
+> 
+> 👉 **[NB-IoT 메인 개발 저장소 바로가기 🚀](https://github.com/Segangs/NB-IOT-Project)**
+
+---
+
+## 🎯 프로젝트 개요 & 목적
+본 프로젝트는 **NB-IoT (HL7811) 셀룰러 모듈**과 **Raspberry Pi Pico 2 W** 단말을 기반으로 한 **초저전력 지능형 이상온도 감지 및 실시간 원격 관제 시스템**입니다. 
+산업용 극저온 냉동고 및 백신 보관소 등의 온도 데이터를 수집하고, 실시간 통신 및 동적 임계 규칙 탐지 엔진을 통해 이상 현상을 관제 화면에 송출 및 AI 챗봇을 통한 능동적 대처 가이드를 제시하는 것을 목적으로 합니다.
+
+### 🛠️ 주요 기술 사항 및 아키텍처
+* **Edge Device (단말 장치)**:
+  * **MCU**: RP2350 (Raspberry Pi Pico 2 W) 기반 C/C++ SDK 펌웨어 설계.
+  * **RTOS**: FreeRTOS 커널 멀티태스킹 스케줄링을 통해 센서 측정, LCD 렌더링, 모뎀 통신, 부저 경보 루틴을 완벽히 병렬화.
+  * **Modem**: HL7811 셀룰러 모뎀을 제어하여 LTE-M(NB-IoT) 망을 통한 TLS 1.2 보안 규격 통신 연동.
+  * **Self-Diagnostics**: 부팅 단계에서 전압(VSYS), 과열(Internal Temp), 플래시 무결성(CRC32), RAM 무결성(Pattern Test) 자가진단 수행.
+  * **Safety Guard**: 하드웨어 와치독(Watchdog), Powman 브라운아웃(Brown-out) 감지 및 오프라인 상태 대비 Flash 비휘발성 로깅 시스템(32바이트 구조체 정렬) 구축.
+* **Control System & Web Server (관제 웹 및 데스크톱)**:
+  * **Backend**: Flask (Python) 기반의 데이터 적재 API 및 기기 상태 관제 서버 구축.
+  * **Database & BaaS**: Supabase PostgreSQL을 통해 센서 측정값 및 부팅 자가진단 로그를 적재하고, Google OAuth 2.0 사용자 및 세션 만료 관리.
+  * **Realtime Sync**: Supabase Realtime 웹소켓(WebSocket) 감지를 연동하여 실시간 데이터 변화 감지 및 화면 깜빡임 없는 DOM 갱신.
+  * **Desktop Packaging**: PyWebView를 통해 단일 브라우저 루프백 연동 로그인(Safari/Chrome 패스크 우회)을 지원하는 크로스 플랫폼 데스크톱 패키징 실현.
 
 ---
 
