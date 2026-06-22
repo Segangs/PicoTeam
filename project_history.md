@@ -41,9 +41,10 @@
 * **ddclient 제거 및 cloudflared Connector 서비스 설치**:
   - `systemctl stop/disable ddclient` 및 `apt-get purge` 실행을 통해 불필요한 DDNS 패키지를 우분투 서버에서 완전 제거.
   - Cloudflare Zero Trust와 연동하는 `cloudflared` 바이너리를 설치하고 systemd 백그라운드 서비스(Active running)로 정상 안착시킴.
-* **EMQX MQTT 브로커 최신 버전(5.8.9) 설치**:
-  - 공식 apt 저장소 연동을 통해 우분투 서버 환경에 `emqx` 서비스를 설치하고 부팅 시 자동 시작되도록 데몬 가동 완료.
-  - 기본 MQTT 통신 포트(`1883`) 및 관리 대시보드 포트(`18083`) 바인딩 확인 완료.
+* **EMQX MQTT 브로커 최신 버전(6.2.1) Docker 구축**:
+  - 기존에 설치한 apt 기반의 EMQX 5.8.9를 정지 및 제거하고, Docker 기반으로 최신 EMQX 6.2.1 버전을 기동 완료.
+  - 우분투 서버 내의 `docker` 사용자 그룹 누락으로 인한 `docker.socket` 기동 장애(Control process exited, status=216/GROUP)를 `groupadd docker` 및 데몬 릴로드를 통해 해결.
+  - Docker 컨테이너를 `--restart always` 및 포트 1883(MQTT), 8083(WS), 8084(WSS), 8883(MQTTS), 18083(대시보드)으로 서비스가 안정 구동되도록 구축 완료.
 
 ---
 
