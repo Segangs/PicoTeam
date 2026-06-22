@@ -26,6 +26,27 @@
 
 ---
 
+## 📅 2026-06-23: [관제 웹 & 서버] Cloudflare Tunnel (zxcx.io) 연동 및 EMQX MQTT 브로커 최신 버전 구축
+* **연동 대화 ID**: `9dc91f96-ffb3-4b09-99d9-8e51ecea9d9e` (2부 / 현재 대화)
+* **개발 범주**: Cloudflare Tunnel (cloudflared), Flask HTTPS Bypass, EMQX MQTT Broker Install, DDNS Cleanup
+
+### 1. 작업 개요 (Goal & Requirements)
+* 기존 `segang.duckdns.org` 도메인 대신 개인 도메인 `zxcx.io`를 Cloudflare DNS에 연동하고, 결제 인증된 정식 Cloudflare Tunnel(`cloudflared`)을 서버에 인스톨하여 대시보드 웹을 포트 포워딩 없는 HTTPS 환경으로 가동.
+* 더 이상 무의미한 DuckDNS IP 자동 동기화 루프 및 `ddclient` 데몬을 제거하고, IoT 단말 통신 수신을 위해 최신 분산형 MQTT 메시지 브로커인 **EMQX**를 구축.
+
+### 2. 주요 작업 및 기술적 의사결정
+* **Flask 서버 HTTPS 해제 및 터널 매핑 (`main.py` 수정)**:
+  - Cloudflare Edge단에서 HTTPS(SSL) 암호화 통신을 일괄 제어하므로, 우분투 서버 측은 자체 SSL 바인딩을 해제하고 HTTP 일반 모드(`port=18180`)로 깔끔하게 동작하도록 전환하여 CPU 리소스를 경감.
+  - `main.py` 내의 `update_duckdns()` 및 `duckdns_loop()` 백그라운드 IP 동기화 스레드 동작을 비활성화 처리.
+* **ddclient 제거 및 cloudflared Connector 서비스 설치**:
+  - `systemctl stop/disable ddclient` 및 `apt-get purge` 실행을 통해 불필요한 DDNS 패키지를 우분투 서버에서 완전 제거.
+  - Cloudflare Zero Trust와 연동하는 `cloudflared` 바이너리를 설치하고 systemd 백그라운드 서비스(Active running)로 정상 안착시킴.
+* **EMQX MQTT 브로커 최신 버전(5.8.9) 설치**:
+  - 공식 apt 저장소 연동을 통해 우분투 서버 환경에 `emqx` 서비스를 설치하고 부팅 시 자동 시작되도록 데몬 가동 완료.
+  - 기본 MQTT 통신 포트(`1883`) 및 관리 대시보드 포트(`18083`) 바인딩 확인 완료.
+
+---
+
 ## 📅 2026-06-22: [단말 펌웨어] 초기 디버그 printf 폭발 방지 및 부팅 격리 패치 (5V 부팅 안정성 확보)
 * **연동 대화 ID**: `9dc91f96-ffb3-4b09-99d9-8e51ecea9d9e` (2부 / 현재 대화)
 * **개발 범주**: FreeRTOS Tasks, stdio CDC Buffer Deadlock, Debug Print Lockout
