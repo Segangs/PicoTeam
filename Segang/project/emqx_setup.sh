@@ -1,28 +1,31 @@
 #!/bin/bash
 
 # EMQX 6.2.1 Supabase 연동 자동화 설정 스크립트
-# 사용법: ./emqx_setup.sh [EMQX_ADMIN_PW] [SUPABASE_DB_PW]
+# 사용법: ./emqx_setup.sh [SUPABASE_DB_PW]
 
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$1" ]; then
     echo "❌ 에러: 매개변수가 누락되었습니다."
-    echo "사용법: ./emqx_setup.sh [EMQX_ADMIN_PW] [SUPABASE_DB_PW]"
+    echo "사용법: ./emqx_setup.sh [SUPABASE_DB_PW]"
     exit 1
 fi
 
-EMQX_ADMIN_PW=$1
-SUPABASE_DB_PW=$2
+SUPABASE_DB_PW=$1
+
+# 스크립트 위치 기준으로 .env 파일 경로 지정
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # .env 파일에서 Supabase URL과 Key 추출
-if [ -f .env ]; then
-    SUPABASE_URL=$(grep SUPABASE_URL .env | cut -d '=' -f2 | tr -d '\r' | xargs)
-    SUPABASE_KEY=$(grep SUPABASE_KEY .env | cut -d '=' -f2 | tr -d '\r' | xargs)
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    SUPABASE_URL=$(grep SUPABASE_URL "$SCRIPT_DIR/.env" | cut -d '=' -f2 | tr -d '\r' | xargs)
+    SUPABASE_KEY=$(grep SUPABASE_KEY "$SCRIPT_DIR/.env" | cut -d '=' -f2 | tr -d '\r' | xargs)
 else
-    echo "❌ 에러: .env 파일을 찾을 수 없습니다."
+    echo "❌ 에러: $SCRIPT_DIR/.env 파일을 찾을 수 없습니다."
     exit 1
 fi
 
 EMQX_API="http://localhost:18083/api/v5"
-AUTH_HEADER="Authorization: Basic $(echo -n "admin:${EMQX_ADMIN_PW}" | base64 | xargs)"
+# CLI를 통해 생성한 API Key (supabase_setup) 인증 헤더 적용
+AUTH_HEADER="Authorization: Basic YVgwMzRZR1ZSU0hqaW5wSDpqRldMeXptU005QlNIdG5uOUEyMzdqOUM2T2lZaEVTWEx0ZFpKVWtZdmRjOUF2Sg=="
 
 echo "🌀 Supabase URL: $SUPABASE_URL"
 echo "🌀 EMQX API 연결 확인 및 설정 주입을 시작합니다..."
