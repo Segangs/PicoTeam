@@ -26,6 +26,14 @@
 
 ---
 
+## 📅 2026-06-23 (추가): [서버] EMQX REST API 인증 오류 트러블슈팅 및 setup 스크립트 개정
+* **연동 대화 ID**: `9dc91f96-ffb3-4b09-99d9-8e51ecea9d9e` (2부 / 현재 대화)
+* **개발 범주**: EMQX CLI API Key generation, emqx_setup.sh modification
+* **작업 및 해결 내역**:
+  - EMQX 6.2.1 보안 사양에 따라 대시보드 어드민 비밀번호를 통한 Basic Auth API 호출이 거부(`BAD_API_KEY_OR_SECRET`)되는 문제를 진단.
+  - EMQX 컨테이너 내 CLI 명령어(`emqx ctl api_keys add`)를 통해 REST API 전용 Key/Secret을 직접 생성하여 스크립트에 고정 매핑함으로써 인증 오류를 해결.
+  - 스크립트 실행 경로의 의존성을 제거하여 어떤 경로에서든 `.env` 파일을 올바르게 감지하도록 수정 및 배포 완료.
+
 ## 📅 2026-06-23: [단말 펌웨어 & 서버] MQTTS (TLS 8883) 통신 마이그레이션 및 Supabase 인증/규칙 연동
 * **연동 대화 ID**: `9dc91f96-ffb3-4b09-99d9-8e51ecea9d9e` (2부 / 현재 대화)
 * **개발 범주**: MQTTS (QoS 2 / Clean Session 1) Migration, HL7811 MQTT AT, Supabase pg_cron Offline Check, authentication_logs DB Schema, LCD Unauth Layout
